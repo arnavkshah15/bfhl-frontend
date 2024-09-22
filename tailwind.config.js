@@ -1,8 +1,7 @@
 module.exports = {
-  mode: 'jit',
   content: [
-    "./pages/**/*.{js,ts,jsx,tsx}",
-    "./components/**/*.{js,ts,jsx,tsx}"
+    './src/**/*.{html,js,jsx,ts,tsx}',  // Adjust according to your file structure
+    './public/index.html',
   ],
   theme: {
     extend: {},

@@ -10,28 +10,40 @@ export default function Home() {
   const [error, setError] = useState(null);
 
   const handleApiSubmit = async (inputData) => {
-    setLoading(true);
+    setLoading(true);   
     setError(null);
+ 
     try {
-      const response = await fetch('https://backend-phi-coral.vercel.app/bfhl', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: inputData,
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      const data = await response.json();
-      setApiResponse(data);
+       console.log('Sending request with data:', inputData); // Log inputData for debugging
+ 
+       const response = await fetch('https://api-bfhl.vercel.app/bfhl', {
+         method: 'POST',
+         headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify(inputData),
+       });
+ 
+       console.log('Received response:', response); // Log response for debugging
+ 
+       if (!response.ok) {
+         throw new Error(`Network response was not ok: ${response.statusText}`);
+       }
+ 
+       const data = await response.json();
+       console.log('Received data:', data); // Log the actual data
+ 
+       setApiResponse(data);
     } catch (error) {
-      setError(error.message);
-      setApiResponse(null);
+       console.error('Error occurred:', error); // Log error details for debugging
+       setError(error.message);
+       setApiResponse(null);
     } finally {
-      setLoading(false);
+       setLoading(false);
     }
-  };
+ };
+ 
+  
+  
+  
 
   const handleFilterChange = (selectedOptions) => {
     setFilterOptions(selectedOptions);
@@ -51,21 +63,25 @@ export default function Home() {
 }
 
 function applyFilter(data, filters) {
-  if (!data || filters.length === 0) return data;
+    if (!data || filters.length === 0) return null;
 
-  // Implement your filtering logic here
-  // For example:
-  const selectedValues = filters.map((filter) => filter.value);
+    let filteredData = '';
 
-  let filteredData = { ...data };
+    // Apply filters based on selected options
+    if (filters.includes('Numbers') && data.numbers) {
+      filteredData += `Numbers: ${data.numbers.join(',')}\n`;
+    }
 
-  if (!selectedValues.includes('numbers')) {
-    filteredData.numbers = [];
-  }
+    if (filters.includes('Alphabets') && data.alphabets) {
+      filteredData += `Alphabets: ${data.alphabets.join(',')}\n`;
+    }
 
-  if (!selectedValues.includes('letters')) {
-    filteredData.letters = [];
-  }
+    if (filters.includes('Highest Lowercase Alphabet') && data.highest_lowercase_alphabet) {
+      filteredData += `Highest Lowercase Alphabet: ${data.highest_lowercase_alphabet.join(',')}\n`;
+    }
 
-  return filteredData;
+    return filteredData.trim();  // Remove any extra newlines
 }
+
+  
+  

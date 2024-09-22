@@ -4,10 +4,16 @@ export default function Input({ onSubmit }) {
   const [apiInput, setApiInput] = useState('');
 
   const handleSubmit = () => {
-    if (onSubmit && apiInput) {
-      onSubmit(apiInput);
+    try {
+      const parsedInput = JSON.parse(apiInput);  // This ensures the input is valid JSON
+      if (onSubmit && parsedInput) {
+        onSubmit(JSON.stringify({ data: parsedInput }));
+      }
+    } catch (error) {
+      alert('Invalid JSON format. Please enter valid JSON.');
     }
   };
+  
 
   return (
     <div className="p-4 flex flex-col">
